@@ -51,7 +51,7 @@ uchar get_texture(const cv::Mat &image, int rows, int cols, int r, int c, int i)
         else if( i == 5)
             texture = image.at<uchar>(r + 1, c);
         else if( i == 6)
-            texture = image.at<uchar>(r - 1, c - 1);
+            texture = image.at<uchar>(r + 1, c - 1);
         else if( i == 7)
             texture = image.at<uchar>(r, c - 1);
     }
