@@ -284,15 +284,15 @@ uchar get_texture(const cv::Mat &image, int rows, int cols, int r, int c, int i)
 }
 
 /**
- * @brief uniform_pattern_lbp: 3x3 LBP , (P,R) = (8,1)
+ * @brief uniform_pattern: 3x3 LBP , (P,R) = (8,1)
  * @param image : gray scale
  * @param lbp : gray scale
  */
-void uniform_pattern_lbp(const cv::Mat &image, cv::Mat &lbp_image)
+void uniform_pattern(const cv::Mat &image, cv::Mat &lbp_image)
 {
     std::vector<uchar> texture(8);
     std::vector<uchar> signed_texture(8);
-    lbp_image = cv::Mat::zeros(image.size(), image.type());
+    lbp_image = cv::Mat::zeros(image.size(), CV_8UC1);
     int rows = image.rows;
     int cols = image.cols;
     int lbp = 0;
@@ -341,50 +341,68 @@ void uniform_pattern_lbp(const cv::Mat &image, cv::Mat &lbp_image)
     }
 }
 
+/**
+ * @brief uniform_pattern_histogram : 3x3 LBP(1,8)
+ * @param lbp_image : gray scale
+ * @param hist : 10 bins
+ */
+void uniform_pattern_histogram(const cv::Mat& lbp_image, cv::Mat &hist)
+{
+    // Uniform Pattern LBP(1,8), bins = 10
+    hist = cv::Mat::zeros(1, 10, CV_32SC1);
+
+    for(int r = 0; r < lbp_image.rows; r++)
+    {
+        for(int c = 0; c < lbp_image.cols; c++)
+        {
+            int bin = (int)lbp_image.at<uchar>(r,c);
+            hist.at<int>(0, bin) = hist.at<int>(0, bin) + 1;
+        }
+    }
+}
+
 int main(int argc, char **argv)
 {
-    //    int uniform_pattern_cnt = 0;
-    //    for (int i = 0; i < 256; ++i) {
-    //        vector<int> bin_i = convertToBinary(i);
-    //        int num_transitions = countTransitions(bin_i);
-    //        if((num_transitions <= 2)
-    //            uniform_pattern_cnt += 1;
-    //    }
-    //    cout << "There are " << uniform_pattern_cnt << " 8-bit uniform\
-    //            patterns\n";
-    //            return 0;
-
-    string imagepath;
+    string filename;
 
     if(argc != 2)
     {
         cout << "USAGE: ./lbp_image [IMAGE]\n";
         //        return 1;
-        imagepath = "face.bmp";
+        filename = "face.bmp";
     }
     else
     {
-        imagepath = argv[1];
+        filename = argv[1];
     }
 
-    Mat src = imread(imagepath, CV_LOAD_IMAGE_GRAYSCALE);
+    Mat src = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
+
+    if(src.empty())
+    {
+        cout << "no image" << endl;
+        return -1;
+    }
 
     Mat lbp_img;
     LBP(src, lbp_img);
 
-    std::cout << lbp_img.size() << endl;
+    std::cout << src.size() << endl;
 
     imshow("lbp", lbp_img);
 
 
     int bt = cv::getTickCount();
-    Mat lbp;
-    uniform_pattern_lbp(src, lbp);
+    uniform_pattern(src, lbp_img);
     int et = cv::getTickCount();
     double t = (et - bt)*1000.0 / cv::getTickFrequency();
     printf("t = %f\n", t);
 
-    imshow("uniform lbp", lbp/10.0*255.0);
+    imshow("uniform lbp", lbp_img/10.0*255.0);
+
+    Mat lbp_hist;
+    uniform_pattern_histogram(lbp_img, lbp_hist);
+    cout << lbp_hist << endl;
 
     waitKey(0);
 
