@@ -62,8 +62,12 @@ CONFIG(debug, debug|release){
 } # win32
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    local_binary_pattern.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
+
+HEADERS += \
+    local_binary_pattern.h
 
