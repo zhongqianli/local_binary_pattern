@@ -279,7 +279,6 @@ void uniform_pattern_histogram(const cv::Mat& image, cv::Mat &norm_lbp_hist)
 
     for(int c = 0; c < norm_lbp_hist.cols; ++c)
     {
-        cout << lbp_hist.at<int>(0, c) << endl;
         norm_lbp_hist.at<float>(0, c) = lbp_hist.at<int>(0, c) / (image.rows * image.cols * 1.0);
     }
 
