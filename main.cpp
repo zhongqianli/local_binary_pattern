@@ -346,17 +346,21 @@ void uniform_pattern(const cv::Mat &image, cv::Mat &lbp_image)
  * @param lbp_image : gray scale
  * @param hist : 10 bins
  */
-void uniform_pattern_histogram(const cv::Mat& lbp_image, cv::Mat &hist)
+void uniform_pattern_histogram(const cv::Mat& image, cv::Mat &lbp_hist)
 {
+    cv::Mat lbp_image;
+
+    uniform_pattern(image, lbp_image);
+
     // Uniform Pattern LBP(1,8), bins = 10
-    hist = cv::Mat::zeros(1, 10, CV_32SC1);
+    lbp_hist = cv::Mat::zeros(1, 10, CV_32SC1);
 
     for(int r = 0; r < lbp_image.rows; r++)
     {
         for(int c = 0; c < lbp_image.cols; c++)
         {
             int bin = (int)lbp_image.at<uchar>(r,c);
-            hist.at<int>(0, bin) = hist.at<int>(0, bin) + 1;
+            lbp_hist.at<int>(0, bin) = lbp_hist.at<int>(0, bin) + 1;
         }
     }
 }
@@ -376,32 +380,36 @@ int main(int argc, char **argv)
         filename = argv[1];
     }
 
-    Mat src = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
+    Mat image = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
 
-    if(src.empty())
+    if(image.empty())
     {
         cout << "no image" << endl;
         return -1;
     }
 
-    Mat lbp_img;
-    LBP(src, lbp_img);
+    Mat lbp_image;
+    LBP(image, lbp_image);
 
-    std::cout << src.size() << endl;
+    std::cout << image.size() << endl;
 
-    imshow("lbp", lbp_img);
+    imshow("lbp", lbp_image);
 
 
     int bt = cv::getTickCount();
-    uniform_pattern(src, lbp_img);
+    uniform_pattern(image, lbp_image);
     int et = cv::getTickCount();
     double t = (et - bt)*1000.0 / cv::getTickFrequency();
-    printf("t = %f\n", t);
+    printf("uniform_pattern : t = %f\n", t);
 
-    imshow("uniform lbp", lbp_img/10.0*255.0);
+    imshow("uniform lbp", lbp_image/10.0*255.0);
 
     Mat lbp_hist;
-    uniform_pattern_histogram(lbp_img, lbp_hist);
+    bt = cv::getTickCount();
+    uniform_pattern_histogram(image, lbp_hist);
+    et = cv::getTickCount();
+    t = (et - bt)*1000.0 / cv::getTickFrequency();
+    printf("uniform_pattern_histogram : t = %f\n", t);
     cout << lbp_hist << endl;
 
     waitKey(0);
