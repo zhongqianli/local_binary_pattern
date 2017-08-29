@@ -258,7 +258,7 @@ void uniform_pattern_histogram(const cv::Mat& image, cv::Mat &lbp_hist)
     uniform_pattern(image, lbp_image);
 
     // Uniform Pattern LBP(1,8), bins = 10
-    lbp_hist = cv::Mat::zeros(1, 10, CV_32SC1);
+    lbp_hist = cv::Mat::zeros(1, 10, CV_32FC1);
 
     for(int r = 0; r < lbp_image.rows; r++)
     {
