@@ -47,13 +47,13 @@ int main(int argc, char **argv)
 
     imshow("uniform lbp", lbp_image/10.0*255.0);
 
-    Mat lbp_hist;
+    Mat norm_lbp_hist;
     bt = cv::getTickCount();
-    uniform_pattern_histogram(image, lbp_hist);
+    uniform_pattern_histogram(image, norm_lbp_hist);
     et = cv::getTickCount();
     t = (et - bt)*1000.0 / cv::getTickFrequency();
     //printf("uniform_pattern_histogram : t = %f\n", t);
-    cout << "hist: " << lbp_hist << endl;
+    cout << "norm_lbp_hist: " << norm_lbp_hist << endl;
 
     waitKey(0);
 

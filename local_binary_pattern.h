@@ -27,7 +27,7 @@ void uniform_pattern(const cv::Mat &image, cv::Mat &lbp_image);
  * @param lbp_image : gray scale
  * @param hist : 10 bins
  */
-void uniform_pattern_histogram(const cv::Mat& image, cv::Mat &lbp_hist);
+void uniform_pattern_histogram(const cv::Mat& image, cv::Mat &norm_lbp_hist);
 
 void LBP(const cv::Mat& image, cv::Mat& lbp_image);
 
