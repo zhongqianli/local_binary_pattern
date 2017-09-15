@@ -1,8 +1,117 @@
 #include "local_binary_pattern.h"
 
 #include <iostream>
+#include <math.h>
 
 using namespace std;
+
+/**
+    """Bilinear interpolation at a given position in the image.
+    Parameters
+    ----------
+    image : double array
+        Input image.
+    rows, cols : int
+        Shape of image.
+    r, c : double
+        Position at which to interpolate.
+    mode : {'C', 'W', 'S', 'E', 'R'}
+        Wrapping mode. Constant, Wrap, Symmetric, Edge or Reflect.
+    cval : double
+        Constant value to use for constant mode.
+    Returns
+    -------
+    value : double
+        Interpolated value.
+    """
+ */
+double bilinear_interpolation(const cv::Mat &image, double r, double c)
+{
+    int minr = int(floor(r));
+    int minc = int(floor(c));
+    int maxr = int(ceil(r));
+    int maxc = int(ceil(c));
+    double dr = r - minr;
+    double dc = c - minc;
+    double top = (1 - dc) * (int)image.at<uchar>(minr, minc) + dc * (int)image.at<uchar>(minr, maxc);
+    double bottom = (1 - dc) * (int)image.at<uchar>(maxr, minc) + dc * (int)image.at<uchar>(maxr, maxc);
+    return (1 - dr) * top + dr * bottom;
+}
+
+/**
+ * @brief local_binary_pattern
+ * @param image
+ * @param P : points_num
+ * @param R : radius
+ * @param method : only uniform. TODO: default, ror, unifrom, var
+ * @param lbp_image
+ */
+void local_binary_pattern(const cv::Mat &image, int P, int R, int method, cv::Mat &lbp_image)
+{
+    std::vector<uchar> texture(P);
+    std::vector<uchar> signed_texture(P);
+    int rows = image.rows;
+    int cols = image.cols;
+    lbp_image = cv::Mat::zeros(rows - 2 * R, cols - 2 * R, CV_8UC1);
+
+    int lbp = 0;
+
+    double rr;
+    double cc;
+    double rp;
+    double cp;
+
+    for(int r = R; r < rows - 2 * R - 1; r++)
+    {
+        for(int c = R; c < cols - 2 * R - 1; c++)
+        {
+            lbp = 0;
+            for(int i = 0; i < P; i++)
+            {
+                rp = - R * sin(2 * CV_PI * i / P);
+                cp = R * cos(2 * CV_PI * i / P);
+//                rp =  floor(rr * 100000.000f) / 100000.000f;
+//                cp = floor(cc * 100000.000f) / 100000.000f;
+
+                texture[i] = (uchar)(cvRound(bilinear_interpolation(image, r + rp, c + cp)));
+                // signed / thresholded texture
+                if((int)texture[i] - (int)image.at<uchar>(r, c) >= 0)
+                {
+                    signed_texture[i] = (uchar)1;
+                }
+                else
+                {
+                    signed_texture[i] = (uchar)0;
+                }
+//                cout << (int)signed_texture[i] << "\t" << (int)texture[i] << endl;
+            }
+
+            int changes = 0;
+            for(int i = 0; i < P-2; i++)
+            {
+                if(signed_texture[i] != signed_texture[i+1])
+                {
+                    changes++;
+                }
+            }
+            if(changes <= 2)
+            {
+                for(int i = 0; i < P; i++)
+                {
+                    lbp += (int)signed_texture[i];
+                }
+            }
+            else
+            {
+                lbp = P + 1;    // P+1
+            }
+
+            lbp_image.at<uchar>(r,c) = (uchar)lbp;
+//            printf("(r,c,lbp) = (%d, %d, %d)\n", r, c, lbp);
+        }
+    }
+}
+
 
 /**
  * @brief get_texture : 获取中心点的8领域像素点的像素值

@@ -3,6 +3,12 @@
 
 #include <opencv2/opencv.hpp>
 
+
+void local_binary_pattern(const cv::Mat &image, int P, int R, int method, cv::Mat &lbp_image);
+
+void local_binary_pattern_histogram(const cv::Mat& image, cv::Mat &norm_lbp_hist);
+
+
 /**
  * @brief get_texture : 获取中心点的8领域像素点的像素值
  * @param image
