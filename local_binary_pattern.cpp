@@ -61,9 +61,11 @@ void local_binary_pattern(const cv::Mat &image, int P, int R, int method, cv::Ma
     double rp;
     double cp;
 
-    for(int r = R; r < rows - 2 * R - 1; r++)
+    int changes;
+
+    for(int r = R; r < rows - 2 * R; r++)
     {
-        for(int c = R; c < cols - 2 * R - 1; c++)
+        for(int c = R; c < cols - 2 * R; c++)
         {
             lbp = 0;
             for(int i = 0; i < P; i++)
@@ -86,7 +88,7 @@ void local_binary_pattern(const cv::Mat &image, int P, int R, int method, cv::Ma
 //                cout << (int)signed_texture[i] << "\t" << (int)texture[i] << endl;
             }
 
-            int changes = 0;
+            changes = 0;
             for(int i = 0; i < P-2; i++)
             {
                 if(signed_texture[i] != signed_texture[i+1])
