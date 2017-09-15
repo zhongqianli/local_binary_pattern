@@ -4,9 +4,9 @@
 #include <opencv2/opencv.hpp>
 
 
-void local_binary_pattern(const cv::Mat &image, int P, int R, int method, cv::Mat &lbp_image);
+cv::Mat local_binary_pattern(const cv::Mat &image, int P, int R, int method);
 
-void local_binary_pattern_histogram(const cv::Mat& image, int P, int R, int method, cv::Mat &norm_lbp_hist);
+cv::Mat local_binary_pattern_histogram(const cv::Mat& image, int P, int R, int method);
 
 
 /**

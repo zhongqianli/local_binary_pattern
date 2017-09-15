@@ -46,13 +46,13 @@ double bilinear_interpolation(const cv::Mat &image, double r, double c)
  * @param method : only uniform. TODO: default, ror, unifrom, var
  * @param lbp_image
  */
-void local_binary_pattern(const cv::Mat &image, int P, int R, int method, cv::Mat &lbp_image)
+cv::Mat local_binary_pattern(const cv::Mat &image, int P, int R, int method)
 {
     std::vector<uchar> texture(P);
     std::vector<uchar> signed_texture(P);
     int rows = image.rows;
     int cols = image.cols;
-    lbp_image = cv::Mat::zeros(rows - 2 * R, cols - 2 * R, CV_8UC1);
+    cv::Mat lbp_image = cv::Mat::zeros(rows - 2 * R, cols - 2 * R, CV_8UC1);
 
     int lbp = 0;
 
@@ -112,13 +112,14 @@ void local_binary_pattern(const cv::Mat &image, int P, int R, int method, cv::Ma
 //            printf("(r,c,lbp) = (%d, %d, %d)\n", r, c, lbp);
         }
     }
+    return lbp_image;
 }
 
-void local_binary_pattern_histogram(const cv::Mat& image, int P, int R, int method, cv::Mat &norm_lbp_hist)
+cv::Mat  local_binary_pattern_histogram(const cv::Mat& image, int P, int R, int method)
 {
     cv::Mat lbp_image;
 
-    local_binary_pattern(image, P, R, method, lbp_image);
+    lbp_image = local_binary_pattern(image, P, R, method);
 
     // Uniform Pattern LBP(1,8), bins = 10
     cv::Mat lbp_hist = cv::Mat::zeros(1, P + 2, CV_32SC1);
@@ -134,13 +135,15 @@ void local_binary_pattern_histogram(const cv::Mat& image, int P, int R, int meth
 
 //    cout << lbp_hist << endl;
 
-    norm_lbp_hist = cv::Mat::zeros(1, P + 2, CV_32FC1);
+    cv::Mat norm_lbp_hist = cv::Mat::zeros(1, P + 2, CV_32FC1);
 
 
     for(int c = 0; c < norm_lbp_hist.cols; ++c)
     {
         norm_lbp_hist.at<float>(0, c) = lbp_hist.at<int>(0, c) / (lbp_image.rows * lbp_image.cols * 1.0);
     }
+
+    return norm_lbp_hist;
 }
 
 
