@@ -112,6 +112,35 @@ void local_binary_pattern(const cv::Mat &image, int P, int R, int method, cv::Ma
     }
 }
 
+void local_binary_pattern_histogram(const cv::Mat& image, int P, int R, int method, cv::Mat &norm_lbp_hist)
+{
+    cv::Mat lbp_image;
+
+    local_binary_pattern(image, P, R, method, lbp_image);
+
+    // Uniform Pattern LBP(1,8), bins = 10
+    cv::Mat lbp_hist = cv::Mat::zeros(1, P + 2, CV_32SC1);
+
+    for(int r = 0; r < lbp_image.rows; r++)
+    {
+        for(int c = 0; c < lbp_image.cols; c++)
+        {
+            int bin = (int)lbp_image.at<uchar>(r,c);
+            lbp_hist.at<int>(0, bin) += 1;
+        }
+    }
+
+//    cout << lbp_hist << endl;
+
+    norm_lbp_hist = cv::Mat::zeros(1, P + 2, CV_32FC1);
+
+
+    for(int c = 0; c < norm_lbp_hist.cols; ++c)
+    {
+        norm_lbp_hist.at<float>(0, c) = lbp_hist.at<int>(0, c) / (lbp_image.rows * lbp_image.cols * 1.0);
+    }
+}
+
 
 /**
  * @brief get_texture : 获取中心点的8领域像素点的像素值

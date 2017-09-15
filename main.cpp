@@ -51,12 +51,16 @@ int main(int argc, char **argv)
 
     int P = 16;
     int R = 2;
+    int method = 0;
     cv::Mat uniform_lbp;
+    cv::Mat norm_lbp_hist;
     bt = cv::getTickCount();
     local_binary_pattern(image, P, R, 0, uniform_lbp);
+    local_binary_pattern_histogram(image, P, R, method, norm_lbp_hist);
+    cout << norm_lbp_hist << endl;
     et = cv::getTickCount();
     t = (et - bt)*1000.0 / cv::getTickFrequency();
-    //printf("uniform_pattern_histogram : t = %f\n", t);
+    printf("local_binary_pattern : t = %f ms\n", t);
 
     imshow("uniform_lbp", uniform_lbp/10.0*255.0);
 
