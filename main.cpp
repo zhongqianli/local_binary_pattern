@@ -31,18 +31,27 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    cv::resize(image, image, cv::Size(24, 24));
+    cv::resize(image, image, cv::Size(200, 200));
 
-//    cv::imshow("image", image);
+    cv::imshow("image", image);
 
-//    Mat lbp_image;
-//    LBP(image, lbp_image);
 
-//    //std::cout << image.size() << endl;
+    cv::Mat lbp_hist;
+    compute_LBP_1_8_hist(image, lbp_hist);
+    cout << "lbp18: " << lbp_hist << endl;
+    compute_LBP_2_16_hist(image, lbp_hist);
+    cout << "lbp216: " << lbp_hist << endl;
+    compute_LBP_3_24_hist(image, lbp_hist);
+    cout << "lbp324: " << lbp_hist << endl;
 
-//    imshow("lbp", lbp_image);
+    Mat lbp_image;
+    LBP(image, lbp_image);
 
-    cv::Mat lbp_image;
+//    std::cout << image.size() << endl;
+
+    imshow("lbp", lbp_image);
+
+//    cv::Mat lbp_image;
 
     int bt = cv::getTickCount();
     uniform_pattern(image, lbp_image);
@@ -50,7 +59,7 @@ int main(int argc, char **argv)
     double t = (et - bt)*1000.0 / cv::getTickFrequency();
     printf("uniform_pattern : t = %d ms\n", (int)t);
 
-//    imshow("uniform lbp", lbp_image/10.0*255.0);
+    imshow("uniform lbp", lbp_image/10.0*255.0);
 
     int P = 8;
     int R = 1;
@@ -67,45 +76,13 @@ int main(int argc, char **argv)
     t = (et - bt)*1000.0 / cv::getTickFrequency();
     printf("local_binary_pattern : t = %d ms\n", (int)t);
 
-//    cout << norm_lbp_hist << endl;
+    cout << norm_lbp_hist << endl;
 
-//    imshow("uniform_lbp", uniform_lbp/10.0*255.0);
+    imshow("uniform_lbp", uniform_lbp/10.0*255.0);
 
-//    Mat norm_lbp_hist2;
-//    bt = cv::getTickCount();
-//    uniform_pattern_histogram(image, norm_lbp_hist2);
-//    et = cv::getTickCount();
-//    t = (et - bt)*1000.0 / cv::getTickFrequency();
-//    printf("uniform_pattern_histogram : t = %f\n", t);
-//    cout << "norm_lbp_hist: " << norm_lbp_hist2 << endl;
 
     waitKey(0);
 
-    //    Mat spatial_hist;
-    //    uniformPatternSpatialHistogram(lbp_img, spatial_hist, 256, cv::Size(3,3), 0);
-
-    //    vector<int> feature_vector;
-    //    for(int j = 0; j < spatial_hist.cols; ++j)
-    //    {
-    //        if(spatial_hist.at<int>(0, j) != -1)
-    //            feature_vector.push_back(spatial_hist.at<int>(0, j));
-    ////        else
-    ////        {
-    ////            cout << "err: -1" << endl;
-    ////        }
-    //    }
-
-    //    cout << "********" << endl;
-
-    //    for(int i = 0; i < feature_vector.size(); ++i)
-
-    //    {
-    //        if(i != (feature_vector.size() - 1))
-    //            cout << feature_vector[i] << " ";
-    //        else
-    //            cout << feature_vector[i];
-    //    }
-    //    cout << "\n";
     return 0;
 
 }

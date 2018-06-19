@@ -1,8 +1,27 @@
+/*
+Author: tim
+Email: tim.zhong@irisian.com
+Function: LBP
+*/
+
 #ifndef LOCAL_BINARY_PATTERN_H
 #define LOCAL_BINARY_PATTERN_H
 
 #include <opencv2/opencv.hpp>
 
+void compute_LBP_1_8_hist(const cv::Mat& image, cv::Mat &lbps_hist);
+void compute_LBP_2_16_hist(const cv::Mat& image, cv::Mat &lbps_hist);
+void compute_LBP_3_24_hist(const cv::Mat& image, cv::Mat &lbps_hist);
+
+void compute_lbps_hist(const cv::Mat& image, cv::Mat &lbps_hist);
+
+cv::Mat compute_lbps_hist(const cv::Mat& image);
+
+double bilinear_interpolation(const cv::Mat &image, double r, double c);
+
+void local_binary_pattern(const cv::Mat &image, int P, int R, int method, cv::Mat &lbp_image);
+
+void local_binary_pattern_histogram(const cv::Mat& image, int P, int R, int method, cv::Mat &norm_lbp_hist);
 
 cv::Mat local_binary_pattern(const cv::Mat &image, int P, int R, int method);
 
