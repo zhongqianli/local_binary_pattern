@@ -31,7 +31,9 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    cv::imshow("image", image);
+    cv::resize(image, image, cv::Size(24, 24));
+
+//    cv::imshow("image", image);
 
 //    Mat lbp_image;
 //    LBP(image, lbp_image);
@@ -40,12 +42,13 @@ int main(int argc, char **argv)
 
 //    imshow("lbp", lbp_image);
 
+    cv::Mat lbp_image;
 
     int bt = cv::getTickCount();
-//    uniform_pattern(image, lbp_image);
+    uniform_pattern(image, lbp_image);
     int et = cv::getTickCount();
     double t = (et - bt)*1000.0 / cv::getTickFrequency();
-//    //printf("uniform_pattern : t = %f\n", t);
+    printf("uniform_pattern : t = %d ms\n", (int)t);
 
 //    imshow("uniform lbp", lbp_image/10.0*255.0);
 
@@ -54,15 +57,19 @@ int main(int argc, char **argv)
     int method = 0;
     cv::Mat uniform_lbp;
     cv::Mat norm_lbp_hist;
+
     bt = cv::getTickCount();
+
     uniform_lbp = local_binary_pattern(image, P, R, method);
     norm_lbp_hist = local_binary_pattern_histogram(image, P, R, method);
-    cout << norm_lbp_hist << endl;
+
     et = cv::getTickCount();
     t = (et - bt)*1000.0 / cv::getTickFrequency();
-    printf("local_binary_pattern : t = %f ms\n", t);
+    printf("local_binary_pattern : t = %d ms\n", (int)t);
 
-    imshow("uniform_lbp", uniform_lbp/10.0*255.0);
+//    cout << norm_lbp_hist << endl;
+
+//    imshow("uniform_lbp", uniform_lbp/10.0*255.0);
 
 //    Mat norm_lbp_hist2;
 //    bt = cv::getTickCount();
