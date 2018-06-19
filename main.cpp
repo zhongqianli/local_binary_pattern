@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 
     cv::imshow("image", image);
 
-
+///////////////////////////////////
     cv::Mat lbp_hist;
     compute_LBP_1_8_hist(image, lbp_hist);
     cout << "lbp18: " << lbp_hist << endl;
@@ -43,6 +43,7 @@ int main(int argc, char **argv)
     cout << "lbp216: " << lbp_hist << endl;
     compute_LBP_3_24_hist(image, lbp_hist);
     cout << "lbp324: " << lbp_hist << endl;
+    ////////////////////////////////////////////
 
     Mat lbp_image;
     LBP(image, lbp_image);
