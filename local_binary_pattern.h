@@ -1,6 +1,5 @@
 /*
 Author: tim
-Email: tim.zhong@irisian.com
 Function: LBP
 */
 
